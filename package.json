@@ -1,0 +1,9 @@
+{
+  "name": "pixel-garden",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate.mjs"
+  }
+}

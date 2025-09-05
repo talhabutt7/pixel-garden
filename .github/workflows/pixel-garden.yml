@@ -1,0 +1,42 @@
+name: Pixel Garden
+
+on:
+  schedule:
+    # Every other day at 09:00 UTC
+    - cron: '0 9 */2 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  grow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate tiles
+        run: node scripts/generate.mjs
+
+      - name: Commit each tile separately
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ -f scripts/.newfiles.txt ]; then
+            while IFS= read -r file; do
+              if [ -n "$file" ]; then
+                git add "$file" manifest.json
+                git commit -m "chore(art): sprout $file"
+                git push
+              fi
+            done < scripts/.newfiles.txt
+          else
+            echo "No new files to commit."
+          fi
