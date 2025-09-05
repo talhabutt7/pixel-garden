@@ -1,10 +1,11 @@
 name: Pixel Garden
 
 on:
+  push:
+    branches: [ master ]   # run on any push to master
+  workflow_dispatch:        # run manually
   schedule:
-    # Every other day at 09:00 UTC
-    - cron: '0 9 */2 * *'
-  workflow_dispatch:
+    - cron: '0 9 */2 * *'   # every other day 09:00 UTC
 
 permissions:
   contents: write
